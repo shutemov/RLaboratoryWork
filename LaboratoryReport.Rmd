@@ -192,7 +192,6 @@ mosaicplot(table)
 ```{r}
 library(tree)
 dt.train$Reason.for.absence = as.factor(dt.train$Reason.for.absence)
-dt.test$Reason.for.absence = as.factor(dt.test$Reason.for.absence)
 predicted <- tree(Reason.for.absence ~ ., dt.train)
 
 summary(predicted)
@@ -201,11 +200,24 @@ plot(predicted)
 text(predicted, pretty = 1)
 title(main = "Classification Tree")
 
-#Выполним сопоставление тестовых и натренированных данных
-sum(predicted == dt.test[, indClass])/ nrow(dt.test)
 ```
 
 3. С помощью случайного леса 
+```{r}
+library(randomForest)
+
+reason.for.absence.rf = randomForest(Reason.for.absence ~ ., dt.train)
+reason.for.absence.rf
+
+var.imp <- importance(reason.for.absence.rf)
+var.imp
+
+best.params <- var.imp[var.imp >50, ]
+best.params
+```
+
+**При использовании алгоритма "случайный лес" получили очень большую ошибку (порядка 50%), поэтому оценки важности показателей находятся на низком уровне** 
+
 4. С помощью байесовской классификации 
 
 ### 4.2  Для каждого метода получим оценки точности классификации на обучающем и тестовом множестве.
