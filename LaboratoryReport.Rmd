@@ -69,4 +69,47 @@ plot(dt$Body.mass.index, dt$Height)
 plot(dt$Reason.for.absence, dt$Month.of.absence)
 ```
 
-Распределение объектов, так же как и в первом пункте, выглядит равномемерным за исключением 
+Распределение объектов, так же как и в первом пункте, выглядит равномемерным.
+
+## Задание №3. Выполним статистический анализ зависимости класса от отдельных показателей.
+
+Для этого исследуем зависимость причин отгула работника от его социального статуса "курильщик":
+
+1. Т.к. эти показатели являются качественными, построим таблицу сопряженности
+
+
+```{r}
+table <- table(dt$Reason.for.absence, dt$Social.smoker)
+
+table
+
+#fisher.test(table,simulate.p.value=TRUE,B=2e8)
+```
+Отрисуем barplot этой зависимости:
+
+```{r}
+# Class ~ f1
+tableClassOfF1 = table(dt$Social.smoker,dt$Reason.for.absence)
+barplot(tableClassOfF1, legend.text = c("Не курильщик", "Курильщик"))
+```
+
+
+Приведем результаты анализа различий для выбранных показателей
+
+```{r}
+table <- table(dt$Social.smoker,dt$Reason.for.absence)
+wilcox.test(dt$Social.smoker,dt$Reason.for.absence)
+```
+Т.к. значение p-value значительно меньше 0.05, то делаем вывод, что на предоставленном датасете выбранные показатели зависимы.
+
+2. Попробуем выяснить зависимость класса (Причина отгула) от непрерывного показателя Weight (Вес) 
+
+```{r}
+table <- table(dt$Reason.for.absence)
+boxplot(dt$Reason.for.absence ~ dt$Weight, dt)
+
+wilcox.test(dt$Reason.for.absence, dt$Weight)
+```
+
+Т.к. значение p-value значительно меньше 0.05, то так же делаем вывод, что на предоставленном датасете выбранные показатели зависимы.
+
