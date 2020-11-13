@@ -159,7 +159,7 @@ barplot(table(dt.train$Reason.for.absence))
 
 ### 4.1 Выполним классификацию данных.
 
-1. С помощью метода knn
+### 1. С помощью метода knn
 
 ```{r}
 library(class)
@@ -187,22 +187,28 @@ table
 mosaicplot(table)
 ```
 
-2. С помощью дерева решений
+### 2. С помощью дерева решений
 
 ```{r}
 library(tree)
 dt.train$Reason.for.absence = as.factor(dt.train$Reason.for.absence)
-predicted <- tree(Reason.for.absence ~ ., dt.train)
+tree <- tree(Reason.for.absence ~ ., dt.train)
 
-summary(predicted)
+summary(tree)
 
-plot(predicted)
-text(predicted, pretty = 1)
+plot(tree)
+text(tree, pretty = 1)
 title(main = "Classification Tree")
 
+predicted <- predict(tree, dt.test[,-indClass], type="class")
+```
+**Точность при использовании tree**
+```{r}
+sum(predicted == dt.test[, indClass])/nrow(dt.test)
 ```
 
-3. С помощью случайного леса 
+
+### 3. С помощью случайного леса 
 ```{r}
 library(randomForest)
 
@@ -214,11 +220,18 @@ var.imp
 
 best.params <- var.imp[var.imp >50, ]
 best.params
+
+predicted <- predict(reason.for.absence.rf, dt.test[,-indClass], type="class")
+
 ```
 
 **При использовании алгоритма "случайный лес" получили очень большую ошибку (порядка 50%), поэтому оценки важности показателей находятся на низком уровне** 
 
-4. С помощью байесовской классификации 
+**Точность при использовании randomForest**
+```{r}
+sum(predicted == dt.test[, indClass])/nrow(dt.test)
+```
+
 ### 4. С помощью байесовской классификации
 
 ```{r}
