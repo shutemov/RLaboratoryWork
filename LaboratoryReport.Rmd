@@ -63,6 +63,7 @@ tbl
 
 
 ```{r}
+summary(dt[,c("Reason.for.absence","Month.of.absence","Seasons","Body.mass.index","Absenteeism.time.in.hours")])
 ```
 
 ```
