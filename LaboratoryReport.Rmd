@@ -114,6 +114,49 @@ wilcox.test(dt$Reason.for.absence, dt$Weight)
 Т.к. значение p-value значительно меньше 0.05, то так же делаем вывод, что на предоставленном датасете выбранные показатели зависимы.
 
 ## Задание №4.
+### Подготовим данные
+Исключим показатель ID (номер работника)
+```{R}
+dt["ID"]<-NULL
+
+names(dt)
+
+indClass <- 1 #причина отгула
+
+names(dt)[indClass]
+```
+
+**Проверим наличие пропусков**
+
+```{r}
+na <- apply(dt, 2, function(v) sum(is.na(v))) # v - vector
+na
+```
+
+Пропусков нет.
+
+**Мы имеем разную природу показателей (сезоны - категориальный признак, время - непрерывный), поэтому нормализуем наши данные**
+
+```{r}
+library(magrittr)
+min.max <- function(v)(v - min(v))/(max(v)-min(v))
+
+dt.scaled <- apply(dt[,-indClass], 2, min.max) # нормализованная таблица
+```
+
+**Затем разделим весь датасет на обучающую и тестовую выборку** 
+
+```{r}
+train.size <- floor(nrow(dt) * .75) # отбираем 75 процентов имеющихся объектов
+
+train.ind <- sample(seq_len(nrow(dt)), size = train.size)
+
+dt.train <- dt[train.ind, ]
+dt.test <- dt[-train.ind, ]
+
+barplot(table(dt.train$Reason.for.absence))
+```
+
 ### 4.1 Выполним классификацию данных.
 
 1. С помощью метода knn
