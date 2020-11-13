@@ -176,7 +176,9 @@ head(predicted)
 #Выполним сопоставление тестовых и натренированных данных
 sum(predicted == dt.test[, indClass])/ nrow(dt.test)
 ```
+
 **Построим матрицу ошибок**
+
 ```{r}
 table = table(PREDICTED = predicted, REAL = dt.test[, indClass])
 
@@ -186,6 +188,23 @@ mosaicplot(table)
 ```
 
 2. С помощью дерева решений
+
+```{r}
+library(tree)
+dt.train$Reason.for.absence = as.factor(dt.train$Reason.for.absence)
+dt.test$Reason.for.absence = as.factor(dt.test$Reason.for.absence)
+predicted <- tree(Reason.for.absence ~ ., dt.train)
+
+summary(predicted)
+
+plot(predicted)
+text(predicted, pretty = 1)
+title(main = "Classification Tree")
+
+#Выполним сопоставление тестовых и натренированных данных
+sum(predicted == dt.test[, indClass])/ nrow(dt.test)
+```
+
 3. С помощью случайного леса 
 4. С помощью байесовской классификации 
 
