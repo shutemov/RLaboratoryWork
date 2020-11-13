@@ -121,7 +121,7 @@ dt["ID"]<-NULL
 
 names(dt)
 
-indClass <- 1 #причина отгула
+indClass <- 1 #1 - причина отгула, 4 - сезон
 
 names(dt)[indClass]
 ```
@@ -219,5 +219,35 @@ best.params
 **При использовании алгоритма "случайный лес" получили очень большую ошибку (порядка 50%), поэтому оценки важности показателей находятся на низком уровне** 
 
 4. С помощью байесовской классификации 
+### 4. С помощью байесовской классификации
+
+```{r}
+library(naivebayes)
+
+# Сменим показатель, потому что классификация по причине прогула в данном методе не рассчитывается.
+indClass <- 4 #1 - причина отгула, 4 - сезон
+
+# получим заново тренировочный датасет, чтобы привести типы показатель к значениям по умолчанию.
+dt.train <- dt[train.ind, ]
+dt.train$Season = as.factor(dt.train$Season)
+
+nb <- naivebayes::naive_bayes(Season ~., dt.train) 
+
+
+summary(nb)
+
+# Posterior probabilities
+predicted <- predict(nb, dt.test[,-indClass], type="class")
+
+predicted
+
+table(PREDICTED = predicted, REAL = dt.test[, indClass])
+```
+
+**Точность при использовании naive_bayes**
+
+```{r}
+sum(predicted == dt.test[, indClass])/nrow(dt.test)
+```
 
 ### 4.2  Для каждого метода получим оценки точности классификации на обучающем и тестовом множестве.
