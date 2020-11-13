@@ -149,7 +149,7 @@ dt.scaled <- apply(dt[,-indClass], 2, min.max) # нормализованная 
 ```{r}
 train.size <- floor(nrow(dt) * .75) # отбираем 75 процентов имеющихся объектов
 
-train.ind <- sample(seq_len(nrow(dt)), size = train.size)
+train.ind <- sample(seq_len(nrow(dt)), size = train.size) 
 
 dt.train <- dt[train.ind, ]
 dt.test <- dt[-train.ind, ]
@@ -160,6 +160,31 @@ barplot(table(dt.train$Reason.for.absence))
 ### 4.1 Выполним классификацию данных.
 
 1. С помощью метода knn
+
+```{r}
+library(class)
+ # устраняем из таргет таблицы показатель класса, затем передаем обучающее множество с известным показателем класса и тестовое множество без показателя класса, необязательный параметр k=11 - кол. соседей  
+predicted <- knn(train = dt.train[, -indClass], cl = dt.train[, indClass], test = dt.test[-indClass], k=11)
+
+# отобразим начало вектора 
+head(predicted)
+
+```
+**Посчитаем точность классификации**
+
+```{r}
+#Выполним сопоставление тестовых и натренированных данных
+sum(predicted == dt.test[, indClass])/ nrow(dt.test)
+```
+**Построим матрицу ошибок**
+```{r}
+table = table(PREDICTED = predicted, REAL = dt.test[, indClass])
+
+table
+
+mosaicplot(table)
+```
+
 2. С помощью дерева решений
 3. С помощью случайного леса 
 4. С помощью байесовской классификации 
