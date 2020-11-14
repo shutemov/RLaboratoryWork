@@ -274,7 +274,33 @@ sum(predicted == dt.test[, indClass])/nrow(dt.test)
 3. Hit.target = 35.803
 4. Absenteeism.time.in.hours = 71.13946
 
+### Задание 6. Выполним классификацию данных методом randomForest на подмножестве "важных" показателей из п.5
+
+**1. подготовим датасет** 
+
+```{r}
+# Сформируем набор выделенных признаков
+selectedFeatures <- c("Reason.for.absence","Month.of.absence", "Work.load.Average.day", "Hit.target", "Absenteeism.time.in.hours")
+
+# Выберем из тренировочного и тестового датасета выделенные признаки
+dtWithSpecialFeature.train <- data.frame(dt.train[,selectedFeatures])
+dtWithSpecialFeature.test <- data.frame(dt.test[,selectedFeatures]) 
+
+# Сменим тип данных для задачи классификации 
+dtWithSpecialFeature.train$Reason.for.absence = as.factor(dtWithSpecialFeature.train$Reason.for.absence)
+
+#dtWithSpecialFeature.test$Reason.for.absence = as.factor(dtWithSpecialFeature.test$Reason.for.absence)
+
+# установим целевой индетификатор класса (1 - причина отгула )
+indClass <- 1 
+
+#классифицируем методов randomForest
+reason.for.absence.rf = randomForest(Reason.for.absence ~ ., dtWithSpecialFeature.train)
+
+# информация о классификации
+reason.for.absence.rf
 
 predicted <- predict(reason.for.absence.rf, dtWithSpecialFeature.test[,-indClass], type="class")
 
 sum(predicted == dtWithSpecialFeature.test[, indClass])/nrow(dtWithSpecialFeature.test)
+```
