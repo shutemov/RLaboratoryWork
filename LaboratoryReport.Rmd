@@ -218,7 +218,7 @@ reason.for.absence.rf
 var.imp <- importance(reason.for.absence.rf)
 var.imp
 
-best.params <- var.imp[var.imp >50, ]
+best.params <- var.imp[var.imp >35, ]
 best.params
 
 predicted <- predict(reason.for.absence.rf, dt.test[,-indClass], type="class")
