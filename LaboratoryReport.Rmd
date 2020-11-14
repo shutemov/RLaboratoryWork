@@ -83,7 +83,7 @@ table <- table(dt$Reason.for.absence, dt$Social.smoker)
 
 table
 
-#fisher.test(table,simulate.p.value=TRUE,B=2e8)
+fisher.test(table,simulate.p.value=TRUE,B=1e3)
 ```
 Отрисуем barplot этой зависимости:
 
