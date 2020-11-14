@@ -1,6 +1,6 @@
 ---
 title: "Практическая работа Анализ данных в среде RStudio"
-author: "Шутемов А.А,, 6371"
+author: "Шутемов А.А., 6371"
 date: "13 11 2020"
 output: html_document
 ---
@@ -205,27 +205,30 @@ library(randomForest)
 
 reason.for.absence.rf = randomForest(Reason.for.absence ~ ., dt.train)
 reason.for.absence.rf
+```
 
+**Оценим важность показателей**
+
+```{r}
 var.imp <- importance(reason.for.absence.rf)
 var.imp
 
 best.params <- var.imp[var.imp >35, ]
 best.params
-
-predicted <- predict(reason.for.absence.rf, dt.test[,-indClass], type="class")
-
 ```
 
 **При использовании алгоритма "случайный лес" получили очень большую ошибку (порядка 50%), поэтому оценки важности показателей находятся на низком уровне** 
 
 **Точность при использовании randomForest**
 ```{r}
+predicted <- predict(reason.for.absence.rf, dt.test[,-indClass], type="class")
+
 sum(predicted == dt.test[, indClass])/nrow(dt.test)
 ```
 
 ### 4. С помощью байесовской классификации
 
-**Сменим показатель, потому что классификация по причине прогула в данном методе не рассчитывается.**
+**Сменим показатель с причины отгула на сезон(время года), потому что классификация по причине прогула в данном методе не рассчитывается.**
 
 ```{r}
 library(naivebayes)
@@ -308,3 +311,5 @@ sum(predicted == dtWithSpecialFeature.test[, indClass])/nrow(dtWithSpecialFeatur
 2. Методы обработки данных перед их исследованием
 3. Методы классификации данных с помощью базовых и сторонних пакетов языка R 
 4. Методы визуализации результатов обработки данных
+5. Методы тестирования зависимостей показателей между собой
+6. Методы оценки важности показателей
