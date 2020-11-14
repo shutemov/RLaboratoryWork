@@ -234,13 +234,15 @@ sum(predicted == dt.test[, indClass])/nrow(dt.test)
 
 ### 4. С помощью байесовской классификации
 
+**Сменим показатель, потому что классификация по причине прогула в данном методе не рассчитывается.**
+
 ```{r}
 library(naivebayes)
 
 # Сменим показатель, потому что классификация по причине прогула в данном методе не рассчитывается.
 indClass <- 4 #1 - причина отгула, 4 - сезон
 
-# получим заново тренировочный датасет, чтобы привести типы показатель к значениям по умолчанию.
+# получим заново тренировочный датасет, чтобы привести тип показателя к значениям по умолчанию.
 dt.train <- dt[train.ind, ]
 dt.train$Season = as.factor(dt.train$Season)
 
@@ -263,4 +265,16 @@ table(PREDICTED = predicted, REAL = dt.test[, indClass])
 sum(predicted == dt.test[, indClass])/nrow(dt.test)
 ```
 
-### 4.2  Для каждого метода получим оценки точности классификации на обучающем и тестовом множестве.
+### Задание 5. Выполним анализ важности показателей с помощью пакета randomForest.
+
+**Пакет randomForest с порогом в 35 ед. (п.4) выявил следующие наиболее важные показатели** 
+
+1. Month.of.absence  = 44.91296     
+2. Work.load.Average.day =  46.07497  
+3. Hit.target = 35.803
+4. Absenteeism.time.in.hours = 71.13946
+
+
+predicted <- predict(reason.for.absence.rf, dtWithSpecialFeature.test[,-indClass], type="class")
+
+sum(predicted == dtWithSpecialFeature.test[, indClass])/nrow(dtWithSpecialFeature.test)
